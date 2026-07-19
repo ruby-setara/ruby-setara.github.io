@@ -26,7 +26,7 @@ Honors and grants
 
 Research experience
 ======
-* **Research Staff Assistant**, Salzman Lab, Zuckerman Institute, Columbia University (May 2024 - present)
+* **Researcher**, Salzman Lab, Zuckerman Institute, Columbia University (May 2024 - present)
   * Advisors: Dr. Evan Kyzar, Dr. Daniel Salzman
   * Behavioral and histological experiments on voluntary alcohol use, including the role of GLP-1 receptor agonists in mitigating voluntary alcohol use and preference, and the temporal progression of voluntary alcohol drinking in mice.
   * Whole-brain cell counting using an original pipeline to identify novel brain regions involved in alcohol consumption, combining immunohistochemistry, chemogenetics, confocal microscopy, conditioned place preference, and conditioned taste aversion.
