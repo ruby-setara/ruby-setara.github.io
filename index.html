@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ruby Setara</title>
+<meta name="description" content="Ruby Setara — researcher at the Zuckerman Institute studying alcohol use disorder, and Research Co-Director at Nucleate NY." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0b1a33;--ink-2:#12244a;--ink-3:#0e2140;
+    --paper:#e9edf6;--paper-soft:#aeb9d3;--paper-faint:#7f8cab;
+    --accent:#9db6f0;--accent-strong:#b9cbf7;--warm:#e0a98f;
+    --line:rgba(233,237,246,.12);--line-soft:rgba(233,237,246,.07);
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --sans:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(1.25rem,5vw,3rem);}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent);color:var(--ink);}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(11,26,51,.82);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line-soft);}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .mark{font-family:var(--serif);font-size:1.15rem;letter-spacing:.01em;cursor:pointer;}
+  .mark b{font-weight:500;}
+  .menu{display:flex;gap:1.9rem;align-items:center;}
+  .menu a{font-size:.94rem;color:var(--paper-soft);position:relative;padding:.2rem 0;transition:color .18s;cursor:pointer;}
+  .menu a:hover{color:var(--paper);}
+  .menu a::after{content:"";position:absolute;left:0;right:100%;bottom:-2px;height:1px;background:var(--accent);transition:right .22s ease;}
+  .menu a:hover::after,.menu a.active::after{right:0;}
+  .menu a.active{color:var(--paper);}
+  .burger{display:none;background:none;border:1px solid var(--line);color:var(--paper);width:40px;height:40px;border-radius:9px;cursor:pointer;font-size:1.1rem;line-height:1;}
+
+  .page{display:none;}
+  .page.active{display:block;}
+
+  /* hero: full-width network banner with photo on top */
+  .hero{position:relative;padding-bottom:clamp(2.5rem,6vw,4rem);}
+  .banner{position:relative;width:100%;height:clamp(280px,36vw,400px);overflow:hidden;}
+  #field{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:.85;}
+  .banner-scrim{position:absolute;inset:0;pointer-events:none;background:
+    linear-gradient(to bottom,rgba(11,26,51,.4) 0%,transparent 28%,transparent 64%,rgba(11,26,51,.75) 88%,var(--ink) 100%),
+    linear-gradient(to right,var(--ink),transparent 15%,transparent 85%,var(--ink));}
+  .hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:calc(-1 * clamp(90px,12vw,140px));}
+  .portrait{width:clamp(160px,20vw,210px);aspect-ratio:4/5;border-radius:16px;overflow:hidden;border:1px solid rgba(233,237,246,.22);box-shadow:0 30px 65px -26px rgba(0,0,0,.85);background:var(--ink-3);}
+  .portrait img{width:100%;height:100%;object-fit:cover;object-position:center 32%;display:block;}
+  .name{font-family:var(--serif);font-weight:500;line-height:1.05;letter-spacing:-.015em;font-size:clamp(2.6rem,6vw,4rem);margin:1.6rem 0 .9rem;}
+  .role{font-family:var(--serif);font-weight:400;font-size:clamp(1.1rem,2.1vw,1.32rem);line-height:1.45;color:var(--paper);margin:0 auto 1.7rem;max-width:34ch;}
+  .links{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;}
+  .links a{font-size:.9rem;color:var(--paper-soft);border:1px solid var(--line);padding:.5rem .95rem;border-radius:999px;transition:border-color .18s,color .18s,background .18s;}
+  .links a:hover{color:var(--paper);border-color:var(--accent);background:rgba(157,182,240,.08);}
+  .links a.key{color:var(--ink);background:var(--accent);border-color:var(--accent);font-weight:500;}
+  .links a.key:hover{background:var(--accent-strong);border-color:var(--accent-strong);}
+
+  /* about */
+  .about{padding:clamp(2.5rem,6vw,4rem) 0 clamp(4rem,8vw,6rem);border-top:1px solid var(--line-soft);}
+  .about-wrap{display:grid;grid-template-columns:120px 1fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:start;}
+  .sec-label{font-family:var(--sans);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--paper-faint);margin:.5rem 0 0;}
+  .prose{max-width:66ch;}
+  .prose p{font-size:1.05rem;line-height:1.78;color:var(--paper-soft);margin:0 0 1.35rem;}
+  .prose p:first-child{color:var(--paper);font-size:1.16rem;line-height:1.7;}
+  .prose p:last-child{margin-bottom:0;}
+
+  /* sub pages */
+  .sub{padding:clamp(3rem,7vw,5rem) 0 clamp(4rem,8vw,6rem);}
+  .sub-title{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,5vw,2.8rem);margin:0 0 2rem;letter-spacing:-.01em;}
+  .entry{padding:1.5rem 0;border-top:1px solid var(--line-soft);}
+  .entry:first-of-type{border-top:none;padding-top:0;}
+  .entry h3{font-family:var(--serif);font-weight:500;font-size:1.28rem;line-height:1.32;margin:0 0 .55rem;}
+  .entry .authors{font-size:.97rem;color:var(--paper-soft);margin:0 0 .3rem;}
+  .entry .authors strong{color:var(--paper);font-weight:500;}
+  .entry .venue{font-size:.9rem;color:var(--paper-faint);margin:0;}
+  .entry a{color:var(--accent-strong);border-bottom:1px solid rgba(185,203,247,.35);}
+
+  /* cv */
+  .cv{padding:clamp(3rem,7vw,5rem) 0 clamp(4rem,8vw,6rem);max-width:780px;}
+  .cv-head{margin:0 0 2.6rem;}
+  .cv-name{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,5vw,2.8rem);margin:0 0 .7rem;letter-spacing:-.01em;}
+  .cv-contact{font-size:.95rem;color:var(--paper-soft);margin:0 0 .45rem;}
+  .cv-pdf{font-size:.95rem;color:var(--paper-soft);margin:0;}
+  .cv-contact a,.cv-pdf a{color:var(--accent-strong);border-bottom:1px solid rgba(185,203,247,.35);transition:border-color .18s;}
+  .cv-section{margin:0 0 2.4rem;}
+  .cv-section h2{font-family:var(--sans);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:500;margin:0 0 1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--line-soft);}
+  .cv-entry{margin:0 0 1.4rem;}
+  .cv-entry:last-child{margin-bottom:0;}
+  .cv-row{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;flex-wrap:wrap;}
+  .cv-title{font-family:var(--serif);font-size:1.14rem;font-weight:500;color:var(--paper);}
+  .cv-when{font-family:var(--mono);font-size:.76rem;color:var(--paper-faint);white-space:nowrap;}
+  .cv-sub{font-size:.95rem;color:var(--paper-soft);margin:.2rem 0 .5rem;font-style:italic;}
+  .cv-entry p.desc{font-size:.96rem;line-height:1.62;color:var(--paper-soft);margin:.4rem 0 0;}
+  .cv-list{list-style:none;margin:0;padding:0;}
+  .cv-list li{font-size:.98rem;color:var(--paper-soft);margin:0 0 .5rem;padding-left:1rem;position:relative;}
+  .cv-list li::before{content:"";position:absolute;left:0;top:.62em;width:4px;height:4px;border-radius:50%;background:var(--accent);}
+  .cite-list{display:flex;flex-direction:column;gap:1rem;}
+  .cite{font-size:.95rem;line-height:1.6;color:var(--paper-soft);margin:0;padding-left:1.4rem;text-indent:-1.4rem;}
+  .cite strong{color:var(--paper);font-weight:500;}
+  .cite a{color:var(--accent-strong);border-bottom:1px solid rgba(185,203,247,.35);word-break:break-word;}
+  .skills-row{margin:0 0 .8rem;font-size:.97rem;line-height:1.65;color:var(--paper-soft);}
+  .skills-row:last-child{margin-bottom:0;}
+  .skills-row b{color:var(--paper);font-weight:500;}
+
+  /* footer */
+  footer{border-top:1px solid var(--line-soft);padding:2.2rem 0 3rem;}
+  .foot-in{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;}
+  .foot-in .who{font-family:var(--serif);font-size:1rem;}
+  .foot-in .who span{color:var(--paper-faint);}
+  .foot-links{display:flex;gap:1.4rem;flex-wrap:wrap;}
+  .foot-links a{font-size:.86rem;color:var(--paper-soft);transition:color .18s;cursor:pointer;}
+  .foot-links a:hover{color:var(--paper);}
+  .foot-in .copy{font-family:var(--mono);font-size:.74rem;color:var(--paper-faint);}
+
+  a:focus-visible,button:focus-visible,.menu a:focus-visible{outline:2px solid var(--accent-strong);outline-offset:3px;border-radius:4px;}
+
+  @media (max-width:820px){
+    .banner{height:clamp(240px,52vw,320px);}
+    .about-wrap{grid-template-columns:1fr;gap:.7rem;}
+    .menu{display:none;}
+    .menu.open{display:flex;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:var(--ink-3);border-bottom:1px solid var(--line);padding:.4rem 0;}
+    .menu.open a{padding:.85rem clamp(1.25rem,5vw,3rem);width:100%;}
+    .menu.open a::after{display:none;}
+    .burger{display:block;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a class="mark" id="brand"><b>Ruby Setara</b></a>
+      <nav class="menu" id="menu">
+        <a data-nav="about" class="active">About</a>
+        <a data-nav="publications">Publications</a>
+        <a data-nav="posters">Posters</a>
+        <a data-nav="cv">CV</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ ABOUT ============ -->
+    <section class="page active" data-page="about">
+      <div class="hero">
+        <div class="banner">
+          <canvas id="field" role="img" aria-label="A network of brain regions stretching across the banner, with activity rippling across the connections between them."></canvas>
+          <div class="banner-scrim"></div>
+        </div>
+        <div class="wrap">
+          <div class="hero-inner">
+            <div class="portrait">
+              <img src="profile.jpg" alt="Ruby Setara" />
+            </div>
+            <h1 class="name">Ruby Setara</h1>
+            <p class="role">Researcher at the Zuckerman Institute studying alcohol use disorder and Research Co-Director at Nucleate NY.</p>
+            <div class="links">
+              <a class="key" href="mailto:rs4659@columbia.edu">Email</a>
+              <a href="https://scholar.google.com/citations?user=kzwI4uEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+              <a href="https://www.linkedin.com/in/rubysetara" target="_blank" rel="noopener">LinkedIn</a>
+              <a href="Setara_CV_2026.pdf">CV (PDF)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about">
+        <div class="wrap about-wrap">
+          <p class="sec-label">About</p>
+          <div class="prose">
+            <p>I am a researcher in the Salzman Lab at Columbia University's Zuckerman Institute, where I work with Dr. Evan Kyzar on the neurobiology of alcohol use disorder, and Co-Director of Research at Nucleate NY, where I evaluate whether early-stage life science ventures are built on science that holds up. Both roles ask the same question from opposite ends: what does it actually take for preclinical science to become a treatment?</p>
+            <p>Brain regions do not function in a vacuum. Alcohol withdrawal and the behaviors that accompany it are mediated by large-scale, brain-wide coordination of activity rather than by any single region acting alone. My work uses two-timepoint neural activity labeling with subtraction (TTP-S), which tags the neurons active at two separate moments within the same brain so that overlapping and divergent populations can be told apart. This whole-brain analysis has identified more than 100 regions consistently activated during alcohol withdrawal and resolves intermingled neuronal populations that respond differently to withdrawal and intoxication, potentially mediating the behavioral switch between those states. I pair the imaging with automated behavioral phenotyping, correlating what an animal is doing directly with whole-brain activation patterns.</p>
+            <p>At Nucleate NY I direct scientific and commercial due diligence for the Activator program, assessing technical viability, market fit, and clinical translational potential across more than 100 early-stage ventures. I built the chapter's map of the New York investor landscape, over 200 firms indexed by investment thesis, into a resource that seed-stage founders use to target their fundraising, and I co-author the annual Impact Report benchmarking the chapter against the rest of the Nucleate network.</p>
+            <p>Before Columbia, I worked in the Becher Lab at the Icahn School of Medicine at Mount Sinai, investigating RBPJ-SIX1 as a tumor suppressor axis in diffuse intrinsic pontine glioma. I built mouse models of DIPG and characterized tumor growth using RNA extraction, Western blots, immunofluorescence, and MRI. As an undergraduate at Fordham I directed three independent projects in Dr. Eduardo Gallo's lab on ventral pallidum cholinergic projection neurons in cue-driven motivated behavior, using in vivo fiber photometry.</p>
+            <p>I am completing a Master of Arts in Biotechnology at Columbia University, expected in October 2027.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PUBLICATIONS ============ -->
+    <section class="page" data-page="publications">
+      <div class="wrap sub">
+        <h1 class="sub-title">Publications</h1>
+
+        <div class="entry">
+          <h3>A two-timepoint framework for sensitive and specific single-cell activity screening</h3>
+          <p class="authors">Ramirez A, Kyzar EJ, Rogerson L, Berland C, Rodriguez E, Guerrero J, <strong>Setara R</strong>, Eisengart M, Virkar S, Hammond LA, Ferrante AW, Salzman CD</p>
+          <p class="venue"><em>Neuron</em>, 114:1–18 (2026) · <a href="https://doi.org/10.1016/j.neuron.2026.05.026">doi.org/10.1016/j.neuron.2026.05.026</a></p>
+        </div>
+
+        <div class="entry">
+          <h3>Ventral pallidum cholinergic neurons respond to reward and signal reward value</h3>
+          <p class="authors">Gannon A, <strong>Setara R</strong>, Maysonet CM, Salazar RE, Zuelke DR, Bowen JE, Gallo EF</p>
+          <p class="venue"><em>bioRxiv</em> (2026) · <a href="https://doi.org/10.64898/2026.05.24.726981">doi.org/10.64898/2026.05.24.726981</a></p>
+        </div>
+
+        <div class="entry">
+          <h3>RBPJ-SIX1 as a tumor suppressor axis in diffuse intrinsic pontine glioma (DIPG-83)</h3>
+          <p class="authors">Racanelli A, Shen C, Gadd SL, Chizhik M, <strong>Setara R</strong>, Ge Y, Schüpper AJ, Puigdelloses M, Hambardzumyan D, Tsankova NM, Becher OJ</p>
+          <p class="venue"><em>Neuro-Oncology</em>, 26(Suppl 4):iv38–iv39 (2024) · <a href="https://doi.org/10.1093/neuonc/noae064.136">doi.org/10.1093/neuonc/noae064.136</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ POSTERS ============ -->
+    <section class="page" data-page="posters">
+      <div class="wrap sub">
+        <h1 class="sub-title">Posters</h1>
+
+        <div class="entry">
+          <h3>Brain-wide signatures of alcohol withdrawal using two-timepoint activity labeling</h3>
+          <p class="authors"><strong>Setara R</strong>, Kyzar E, Eisengart M, Virkar S, Rogerson L, Salzman CD</p>
+          <p class="venue">Society for Neuroscience (SfN) 2025 · San Diego, CA · November 2025</p>
+        </div>
+
+        <div class="entry">
+          <h3>Whole-brain two-timepoint analysis of neuronal activity during the progression of voluntary alcohol drinking</h3>
+          <p class="authors">Kyzar EJ, <strong>Setara R</strong>, Rogerson L, Eisengart M, Ramirez A, Uceda-Alvarez B, Rodriguez E, Salzman CD</p>
+          <p class="venue">Society for Neuroscience (SfN) 2024 · Chicago, IL (LBA69)</p>
+        </div>
+
+        <div class="entry">
+          <h3>Activity of ventral pallidum cholinergic projection neurons increases in response to reward and is modulated by reward value</h3>
+          <p class="authors">Gannon A, <strong>Setara R</strong>, Salazar R, Maysonet C, Zuelke D, Gallo EF</p>
+          <p class="venue">Society for Neuroscience (SfN) 2024 · Chicago, IL (PSTR296.25)</p>
+        </div>
+
+        <div class="entry">
+          <h3>Determining whether social cues are modulated by oxytocin receptor neurons</h3>
+          <p class="authors">Cruz C, Rodriguez E, Uceda-Alvarez B, <strong>Setara R</strong>, Thurnherr M, Jones B, Salzman CD</p>
+          <p class="venue">NYC Science Research and Mentoring Consortium · New York, NY · 2024</p>
+        </div>
+
+        <div class="entry">
+          <h3>Cue-evoked nucleus accumbens acetylcholine tracks reward value and delay cost in impulsive choice</h3>
+          <p class="authors">Cavallaro J, Mannheim W, Salazar R, <strong>Setara R</strong>, Maysonet C, Gallo EF</p>
+          <p class="venue">Basal Ganglia Gordon Research Conference · Ventura, CA · 2024</p>
+        </div>
+
+        <div class="entry">
+          <h3>Role of ventral pallidum cholinergic projection neuron activity in cue-driven motivated behavior</h3>
+          <p class="authors"><strong>Setara R</strong>, Gannon A, Salazar R, Gallo EF</p>
+          <p class="venue">Fordham University Undergraduate Research Symposium · Bronx, NY · 2023</p>
+        </div>
+
+        <div class="entry">
+          <h3>Dopamine D2 receptors in nucleus accumbens cholinergic interneurons increase impulsive choice</h3>
+          <p class="authors">Cavallaro J, Yeisley J, <strong>Setara R</strong>, Floeder J, Gallo EF</p>
+          <p class="venue">Society for Neuroscience (SfN) 2022 · San Diego, CA (Program 649.06)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CV ============ -->
+    <section class="page" data-page="cv">
+      <div class="wrap cv">
+        <header class="cv-head">
+          <h1 class="cv-name">Ruby Setara</h1>
+          <p class="cv-contact"><a href="mailto:rs4659@columbia.edu">rs4659@columbia.edu</a> · <a href="https://scholar.google.com/citations?user=kzwI4uEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a> · <a href="https://www.linkedin.com/in/rubysetara" target="_blank" rel="noopener">LinkedIn</a></p>
+          <p class="cv-pdf">A PDF version is available <a href="Setara_CV_2026.pdf">here</a>.</p>
+        </header>
+
+        <section class="cv-section">
+          <h2>Education</h2>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Columbia University — Graduate School of Arts and Sciences</span><span class="cv-when">Sep 2025 – Oct 2027</span></div>
+            <p class="cv-sub">M.A., Biotechnology · New York, NY · GPA 3.9/4.0</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Fordham University — Fordham College</span><span class="cv-when">Sep 2019 – May 2023</span></div>
+            <p class="cv-sub">B.S., Biological Sciences · Bronx, NY</p>
+          </div>
+        </section>
+
+        <section class="cv-section">
+          <h2>Honors &amp; Grants</h2>
+          <ul class="cv-list">
+            <li>Society for Neuroscience Trainee Professional Development Award (2025)</li>
+            <li>Len Blavatnik STEM Research Fellowship (2023)</li>
+            <li>Fordham University Undergraduate Research Grant (Summer &amp; Fall 2022)</li>
+            <li>Jogues Scholarship (2019–2023)</li>
+          </ul>
+        </section>
+
+        <section class="cv-section">
+          <h2>Research Experience</h2>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Research Staff Assistant · Salzman Lab, Zuckerman Institute, Columbia</span><span class="cv-when">May 2024 – Present</span></div>
+            <p class="cv-sub">Advisors: Dr. Evan Kyzar, Dr. Daniel Salzman (P.I.)</p>
+            <p class="desc">Conduct behavioral and histological experiments across several projects on voluntary alcohol use — including the role of GLP-1 receptor agonists in mitigating voluntary alcohol use and preference, and defining the temporal progression of voluntary alcohol use in mice. Using immunohistochemistry, conditioned place preference and taste aversion assays, mouse handling and husbandry, chemogenetics, and confocal microscopy, we perform whole-brain cell-counting with an original pipeline to identify novel brain regions involved in alcohol consumption. Presented at the Society for Neuroscience Conference, 2024 &amp; 2025.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Research Associate · Becher Lab, Icahn School of Medicine at Mount Sinai</span><span class="cv-when">Jul 2023 – Jan 2024</span></div>
+            <p class="cv-sub">Advisors: Anna Racanelli, M.S., Dr. Oren Becher (P.I.)</p>
+            <p class="desc">Investigated novel therapeutic targets for diffuse intrinsic pontine glioma (DIPG), specifically the RBPJ-SIX1 gene as a tumor suppressor. Using cell and neurosphere culture, developed mouse models for DIPG and conducted RNA extraction assays, Western blots, immunofluorescence, immunohistochemistry, and MRIs to characterize tumor growth. Mentored and trained high school interns in basic research techniques. Published in the Oxford Academic Neuro-Oncology journal.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Undergraduate Researcher · Neurobiology of Motivated Behavior Lab, Fordham</span><span class="cv-when">Sep 2021 – May 2023</span></div>
+            <p class="cv-sub">Advisor: Dr. Eduardo Gallo (P.I.)</p>
+            <p class="desc">Directed three independent projects investigating ventral pallidum cholinergic projection neurons (VP-CPNs) in cue-driven motivated behavior. Used in vivo fiber photometry to characterize VP-CPN activity during cue-motivated assays; performed immunohistochemistry and data analysis in GuPPy and MATLAB to resolve activity on a trial-by-trial basis. Wrote Fordham Undergraduate Research Grant proposals and built operant behavioral assays. Mentored technicians, undergraduate, and graduate students. Presented at the Society for Neuroscience Conference, Chicago, 2024.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Research Assistant · Department of Psychology, Fordham</span><span class="cv-when">Sep 2020 – Sep 2021</span></div>
+            <p class="cv-sub">Advisor: Dr. Andrew Rasmussen</p>
+            <p class="desc">Developed a multi-level Qualtrics survey assessing how sociodemographic and cultural factors predicted risk perception among NYC college students during the COVID-19 pandemic. Analyzed a 2,800+ response dataset in SPSS and Excel; developed and co-authored a manuscript for publication.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Research Assistant · Jacobi Medical Center, NYC Health + Hospitals</span><span class="cv-when">Jan 2020 – Dec 2021</span></div>
+            <p class="cv-sub">Advisor: Dr. Daniela Levanon</p>
+            <p class="desc">Coordinated a weekly virtual lifestyle program during the COVID-19 pandemic for 126 low-income pediatric patients with nonalcoholic fatty liver disease (NAFLD). Corresponded between patients and providers; computed statistics on triglycerides, BMI, glycated hemoglobin, and other markers using Excel and EPIC; tracked biomarkers throughout the program to characterize efficacy.</p>
+          </div>
+        </section>
+
+        <section class="cv-section">
+          <h2>Leadership &amp; Service</h2>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Co-Director of Research · Nucleate NY</span><span class="cv-when">Feb 2026 – Present</span></div>
+            <p class="desc">Direct scientific and commercial due diligence on 100+ early-stage life-science ventures for Nucleate NY's Activator program, evaluating technical viability, market fit, and clinical translational potential. Using biotech deal analysis — investment-thesis evaluation and market sizing — mapped the NYC venture ecosystem end-to-end and built a strategic guide of 200+ target investors to accelerate seed-stage fundraising. Co-authoring the annual Nucleate NY Impact Report, synthesizing programmatic data to communicate venture growth and ROI and to benchmark chapter performance.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Mentor · Biobus, Columbia Zuckerman Institute</span><span class="cv-when">Jan 2025 – Jan 2026</span></div>
+            <p class="desc">Mentored high school students in the Harlem Women in STEM Junior Scientist program in developing and presenting an independent research project, presented at the American Museum of Natural History in May 2025.</p>
+          </div>
+          <div class="cv-entry">
+            <div class="cv-row"><span class="cv-title">Planning Committee · Columbia University Neuroscience Outreach (CUNO)</span><span class="cv-when">Sep 2024 – Sep 2025</span></div>
+            <p class="desc">Planned and ran themed neuroscience events for local children as part of the Saturday Science committee, developing child-friendly interactive activities around a monthly theme.</p>
+          </div>
+        </section>
+
+        <section class="cv-section">
+          <h2>Publications</h2>
+          <div class="cite-list">
+            <p class="cite">Gannon A, <strong>Setara R</strong>, Maysonet CM, Salazar RE, Zuelke DR, Bowen JE, Gallo EF (2026). Ventral pallidum cholinergic neurons respond to reward and signal reward value. <em>bioRxiv</em>. <a href="https://doi.org/10.64898/2026.05.24.726981">https://doi.org/10.64898/2026.05.24.726981</a></p>
+            <p class="cite">Ramirez A, Kyzar EJ, Rogerson L, Berland C, Rodriguez E, Guerrero J, <strong>Setara R</strong>, Eisengart M, Virkar S, Hammond LA, Ferrante AW, Salzman CD (2026). A two-timepoint framework for sensitive and specific single-cell activity screening. <em>Neuron</em>, 114, 1–18. <a href="https://doi.org/10.1016/j.neuron.2026.05.026">https://doi.org/10.1016/j.neuron.2026.05.026</a></p>
+            <p class="cite">Racanelli A, Shen C, Gadd SL, Chizhik M, <strong>Setara R</strong>, Ge Y, Schüpper AJ, Puigdelloses M, Hambardzumyan D, Tsankova NM, Becher OJ (2024). DIPG-83. RBPJ-SIX1 as a tumor suppressor axis in diffuse intrinsic pontine glioma. <em>Neuro-Oncology</em>, 26(Suppl 4), iv38–iv39. <a href="https://doi.org/10.1093/neuonc/noae064.136">https://doi.org/10.1093/neuonc/noae064.136</a></p>
+          </div>
+        </section>
+
+        <section class="cv-section">
+          <h2>Posters</h2>
+          <div class="cite-list">
+            <p class="cite"><strong>Setara R</strong>, Kyzar E, Eisengart M, Virkar S, Rogerson L, Salzman CD (2025, Nov 15–19). Brain-wide signatures of alcohol withdrawal using two-timepoint activity labeling. Society for Neuroscience (SfN) 2025, San Diego, CA.</p>
+            <p class="cite">Kyzar EJ, <strong>Setara R</strong>, Rogerson L, Eisengart M, Ramirez A, Uceda-Alvarez B, Rodriguez E, Salzman CD (2024, Oct 8). Whole-brain two-timepoint analysis of neuronal activity during the progression of voluntary alcohol drinking. LBA69. Society for Neuroscience 2024, Chicago, IL.</p>
+            <p class="cite">Gannon A, <strong>Setara R</strong>, Salazar R, Maysonet C, Zuelke D, Gallo EF (2024, Oct 8). Activity of ventral pallidum cholinergic projection neurons increases in response to reward and is modulated by reward value. PSTR296.25. Society for Neuroscience 2024, Chicago, IL.</p>
+            <p class="cite">Cruz C, Rodriguez E, Uceda-Alvarez B, <strong>Setara R</strong>, Thurnherr M, Jones B, Salzman CD (2024). Determining whether social cues are modulated by oxytocin receptor neurons. NYC Science Research and Mentoring Consortium, New York, NY.</p>
+            <p class="cite">Cavallaro J, Mannheim W, Salazar R, <strong>Setara R</strong>, Maysonet C, Gallo EF (2024). Cue-evoked nucleus accumbens acetylcholine tracks reward value and delay cost in impulsive choice. Basal Ganglia Gordon Research Conference, Ventura, CA.</p>
+            <p class="cite"><strong>Setara R</strong>, Gannon A, Salazar R, Gallo EF (2023). Role of ventral pallidum cholinergic projection neuron activity in cue-driven motivated behavior. Fordham University Undergraduate Research Symposium, Bronx, NY.</p>
+            <p class="cite">Cavallaro J, Yeisley J, <strong>Setara R</strong>, Floeder J, Gallo EF (2022). Dopamine D2 receptors in nucleus accumbens cholinergic interneurons increase impulsive choice. Program No. 649.06. Society for Neuroscience 2022, San Diego, CA.</p>
+          </div>
+        </section>
+
+        <section class="cv-section">
+          <h2>Laboratory Skills</h2>
+          <p class="skills-row"><b>Animal behavior:</b> Mouse handling and husbandry, operant conditioning, intraperitoneal and intracranial injections, fiber photometry, conditioned taste aversion, conditioned place preference, alcohol preference, in vivo optogenetics, Drosophila handling.</p>
+          <p class="skills-row"><b>Molecular:</b> Immunohistochemistry, immunocytochemistry, Western blot, sectioning brain tissue on cryostat and vibratome, cell culture, RNA extraction, confocal microscopy, bioluminescent imaging, rodent MRIs.</p>
+          <p class="skills-row"><b>Computational:</b> GraphPad Prism, ImageJ, BrainJ, Whole-Brain Reconstruction Pipeline, GuPPy, SPSS, MATLAB, EPIC, Qualtrics, spinning-disk confocal microscopy, Google Suite.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot-in">
+      <p class="who">Ruby Setara <span>— New York, NY</span></p>
+      <nav class="foot-links">
+        <a href="mailto:rs4659@columbia.edu">Email</a>
+        <a href="https://scholar.google.com/citations?user=kzwI4uEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://www.linkedin.com/in/rubysetara" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="Setara_CV_2026.pdf">CV</a>
+      </nav>
+      <p class="copy">© 2026</p>
+    </div>
+  </footer>
+
+<script>
+  (function(){
+    var box=document.querySelector('.banner');
+    var cv=document.getElementById('field');
+    if(cv&&box&&cv.getContext){
+      var ctx=cv.getContext('2d');
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var dpr=Math.min(window.devicePixelRatio||1,2);
+      var W=0,H=0,nodes=[],edges=[];
+      function build(){
+        nodes=[];edges=[];
+        var w=(box.getBoundingClientRect().width)||1000;
+        var N=Math.round(Math.min(120,Math.max(70,w/13)));
+        for(var i=0;i<N;i++){
+          var x=Math.random();
+          var y=0.5+(Math.random()-0.5)*(0.62+0.38*Math.random());
+          if(y<0.02)y=0.02;if(y>0.98)y=0.98;
+          nodes.push({x:x,y:y,warm:Math.random()<0.16,act:-9999,adj:[]});
+        }
+      }
+      function buildEdges(){
+        for(var i=0;i<nodes.length;i++)nodes[i].adj=[];
+        for(var i=0;i<nodes.length;i++){
+          var ds=[];
+          for(var j=0;j<nodes.length;j++){if(i===j)continue;var dx=(nodes[i].x-nodes[j].x)*W,dy=(nodes[i].y-nodes[j].y)*H;ds.push({j:j,d:dx*dx+dy*dy});}
+          ds.sort(function(a,b){return a.d-b.d;});
+          for(var m=0;m<3&&m<ds.length;m++)nodes[i].adj.push(ds[m].j);
+        }
+        edges=[];var seen={};
+        for(var i=0;i<nodes.length;i++){
+          nodes[i].adj.slice().forEach(function(j){
+            var a=i<j?i:j,b=i<j?j:i,key=a+'-'+b;
+            if(!seen[key]){seen[key]=1;edges.push([a,b]);}
+            if(nodes[j].adj.indexOf(i)<0)nodes[j].adj.push(i);
+          });
+        }
+      }
+      function resize(){var r=box.getBoundingClientRect();W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(W&&H)buildEdges();}
+      function env(dt){if(dt<0)return 0;if(dt<90)return dt/90;var f=1-(dt-90)/650;return f>0?f*f:0;}
+      function spawn(t){
+        var src=Math.floor(Math.random()*nodes.length);
+        var dist={};dist[src]=0;var q=[src];
+        while(q.length){var c=q.shift();if(dist[c]>=4)continue;nodes[c].adj.forEach(function(nb){if(dist[nb]===undefined){dist[nb]=dist[c]+1;q.push(nb);}});}
+        for(var k in dist){var idx=+k,at=t+dist[k]*160;if(at>nodes[idx].act)nodes[idx].act=at;}
+      }
+      var nextSpawn=0;
+      function frame(t){
+        if(!W||!H)resize();
+        if(!nextSpawn)nextSpawn=t+300;
+        if(t>nextSpawn){spawn(t);nextSpawn=t+1400;}
+        ctx.clearRect(0,0,W,H);
+        for(var i=0;i<edges.length;i++){
+          var a=nodes[edges[i][0]],b=nodes[edges[i][1]];
+          var e=Math.max(env(t-a.act),env(t-b.act));
+          ctx.strokeStyle='rgba(157,182,240,'+(0.05+e*0.5).toFixed(3)+')';
+          ctx.lineWidth=0.6+e*0.9;
+          ctx.beginPath();ctx.moveTo(a.x*W,a.y*H);ctx.lineTo(b.x*W,b.y*H);ctx.stroke();
+        }
+        for(var i=0;i<nodes.length;i++){
+          var n=nodes[i],e=env(t-n.act),rr=1.4+e*3;
+          var bs=n.warm?[224,169,143]:[157,182,240],hi=n.warm?[233,190,160]:[198,214,250];
+          var cr=Math.round(bs[0]+(hi[0]-bs[0])*e),cg=Math.round(bs[1]+(hi[1]-bs[1])*e),cb=Math.round(bs[2]+(hi[2]-bs[2])*e);
+          if(e>0.05){ctx.fillStyle='rgba('+cr+','+cg+','+cb+','+(e*0.15).toFixed(3)+')';ctx.beginPath();ctx.arc(n.x*W,n.y*H,rr*2.7,0,6.2832);ctx.fill();}
+          ctx.fillStyle='rgba('+cr+','+cg+','+cb+','+(0.28+e*0.68).toFixed(3)+')';
+          ctx.beginPath();ctx.arc(n.x*W,n.y*H,rr,0,6.2832);ctx.fill();
+        }
+        requestAnimationFrame(frame);
+      }
+      function staticFrame(){
+        if(!W||!H)resize();
+        ctx.clearRect(0,0,W,H);
+        for(var i=0;i<edges.length;i++){var a=nodes[edges[i][0]],b=nodes[edges[i][1]];ctx.strokeStyle='rgba(157,182,240,0.10)';ctx.lineWidth=0.7;ctx.beginPath();ctx.moveTo(a.x*W,a.y*H);ctx.lineTo(b.x*W,b.y*H);ctx.stroke();}
+        for(var i=0;i<nodes.length;i++){var n=nodes[i],e=Math.random()*0.75,col=n.warm?'224,169,143':'157,182,240';ctx.fillStyle='rgba('+col+','+(0.3+e*0.5).toFixed(2)+')';ctx.beginPath();ctx.arc(n.x*W,n.y*H,1.5+e*2.1,0,6.2832);ctx.fill();}
+      }
+      build();resize();
+      if(window.ResizeObserver){new ResizeObserver(function(){resize();if(reduce)staticFrame();}).observe(box);}
+      else{window.addEventListener('resize',function(){resize();if(reduce)staticFrame();});}
+      if(reduce)staticFrame();else requestAnimationFrame(frame);
+    }
+  })();
+  (function(){
+    var links=document.querySelectorAll('[data-nav]');
+    var pages=document.querySelectorAll('.page');
+    var burger=document.getElementById('burger'), menu=document.getElementById('menu'), brand=document.getElementById('brand');
+    function closeMenu(){menu.classList.remove('open');burger.textContent='☰';burger.setAttribute('aria-expanded','false');}
+    function show(name){
+      pages.forEach(function(p){p.classList.toggle('active',p.dataset.page===name);});
+      links.forEach(function(l){l.classList.toggle('active',l.dataset.nav===name);});
+      window.scrollTo(0,0);
+    }
+    links.forEach(function(l){l.addEventListener('click',function(e){e.preventDefault();show(l.dataset.nav);closeMenu();});});
+    if(brand){brand.addEventListener('click',function(e){e.preventDefault();show('about');closeMenu();});}
+    if(burger&&menu){
+      burger.addEventListener('click',function(){
+        var open=menu.classList.toggle('open');
+        burger.setAttribute('aria-expanded',open?'true':'false');
+        burger.textContent=open?'✕':'☰';
+      });
+    }
+  })();
+</script>
+</body>
+</html>
